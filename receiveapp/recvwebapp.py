@@ -1,25 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, jsonify
- 
-app = Flask(__name__)
-
-msg = 'Hello!'
-
-@app.route('/text')
-def printText(msg):
-    return msg
-
-#if __name__ == '__main__':
-#    app.run(port=5000, host='127.0.0.1')
-
+import requests
 import pika
 
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode("utf-8"))
     
-    printText(body.decode("utf-8"))
-
+    # post the text message to the web page
+    requests.post("http://127.0.0.1:5000", data={'text': body.decode("utf-8")})
 
 def rabbitMsgQueue():
     # establish a connection with localhost message broker server
@@ -38,4 +26,5 @@ def rabbitMsgQueue():
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
 
-rabbitMsgQueue()
+rabbitMsgQueue()# -*- coding: utf-8 -*-
+
