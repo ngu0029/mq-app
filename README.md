@@ -104,7 +104,8 @@ PS C:\Users\T901\Anaconda3\Scripts> .\ipython D:\github\mq-app\receiveapp\recvwe
 
 ============= TEST =============
 1. Open a new Windows PowerSheel, and enter curl command to do HTTP Post
-docker exec -it send-app curl -k --data "text=HELLO" http://127.0.0.1:443/
+
+PS C:\Users\T901> docker exec -it send-app curl -k --data "text=HELLO" http://127.0.0.1:443/
 2. Open web browser, e.g. Chrome, and browser to the localhost at port 5000 http://127.0.0.1:5000
 You would see the text, for example: HELLO, on the web page.
 3. Change the text parameter in the curl command, then repeat the curl command on the command prompt and 
