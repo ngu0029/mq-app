@@ -10,7 +10,9 @@ class initialText:
 
 class http_server:
     def __init__(self, text):
-        server = HTTPServer(('127.0.0.1', 5000), SimpleHTTPRequestHandler)
+        # 172.17.0.4 is the http server's container ip address
+        # change to 127.0.0.1:5000 in case you run with local anaconda IPython
+        server = HTTPServer(('172.17.0.4', 5000), SimpleHTTPRequestHandler)
         server.text = text
         server.serve_forever()
 
@@ -50,9 +52,9 @@ if __name__ == '__main__':
     m = main()
 
 # Using command prompt -- DO POST
-# try: curl -k --data "text=for-bar" http://localhost:443/
+# try: curl -k --data "text=for-bar" http://localhost:5000/
 # output: This is POST request. Received: text=for-bar
 
 # Using a browser like Chrome -- DO GET
-# try: http://localhost:443/
+# try: http://localhost:5000/
 # display: Hello, world!

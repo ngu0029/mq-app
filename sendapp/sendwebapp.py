@@ -7,8 +7,10 @@ import pika
 
 def rabbitMsgQueue(message):
     # establish a connection with localhost message broker server
-    connection = pika.BlockingConnection(pika.ConnectionParameters('127.0.0.1',\
-                                                                   port=80))
+    # 172.17.0.2 is the rabbitmq's container ip address
+    # change to 127.0.0.1:80 in case you run with local anaconda IPython
+    connection = pika.BlockingConnection(pika.ConnectionParameters('172.17.0.2',\
+                                                                   port=5672))
     channel = connection.channel()
     
     # create the text queue to which the message will be delivered
