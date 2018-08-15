@@ -17,7 +17,7 @@ echo "docker run -d -it --rm --name send-app -p 443:443 my-sending-app"
 cd sendapp
 docker build -t my-sending-app .
 #detach the container with -d (run in the background)
-docker run -d -it --rm --name send-app -p 443:443 my-sending-app
+docker run -d -it --rm --name send-app -p 443:443 --link my-rabbitmq:my-rabbitmq my-sending-app
 echo
 
 echo "Build and run Python Docker image for the http server app"
@@ -40,7 +40,7 @@ cd receiveapp
 sleep 10s
 docker build -t my-receiving-app .
 #detach the container with -d (run in the background)
-docker run -d -it --rm --name receive-app -p 8080:8080 my-receiving-app
+docker run -d -it --rm --name receive-app -p 8080:8080 --link my-rabbitmq:my-rabbitmq --link server-app:server-app my-receiving-app
 echo
 
 cd ..

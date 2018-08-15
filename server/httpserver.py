@@ -6,13 +6,13 @@ from io import BytesIO
 
 class initialText:
     def show(self):
-        return "Initial Text"
+        return "Initial Text".encode('utf-8')
 
 class http_server:
     def __init__(self, text):
-        # 172.17.0.4 is the http server's container ip address
-        # change to 127.0.0.1:5000 in case you run with local anaconda IPython
-        server = HTTPServer(('172.17.0.4', 5000), SimpleHTTPRequestHandler)
+        # change to 172.17.0.4:5000 in case you use this ip addr of the http server's container assigned on your local host
+        # change to 127.0.0.1:5000 in case you run with local Anaconda IPython
+        server = HTTPServer(('0.0.0.0', 5000), SimpleHTTPRequestHandler)
         server.text = text
         server.serve_forever()
 
@@ -45,7 +45,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 class main:
     def __init__(self):
-        self.text = initialText()
+        text = initialText()
+        self.text = text.show()
         self.server = http_server(self.text)
 
 if __name__ == '__main__':

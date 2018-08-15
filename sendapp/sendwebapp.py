@@ -7,9 +7,10 @@ import pika
 
 def rabbitMsgQueue(message):
     # establish a connection with localhost message broker server
-    # 172.17.0.2 is the rabbitmq's container ip address
-    # change to 127.0.0.1:80 in case you run with local anaconda IPython
-    connection = pika.BlockingConnection(pika.ConnectionParameters('172.17.0.2',\
+    # change to 172.17.0.2:5672 in case you use this ip addr of the rabbitmq's container assigned on your local host
+    # change to 127.0.0.1:80 in case you run with local Anaconda IPython
+	# Use --link for networking between containers
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='my-rabbitmq',\
                                                                    port=5672))
     channel = connection.channel()
     
@@ -49,8 +50,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         response.write(b'Received: ')
         response.write(body)
         self.wfile.write(response.getvalue())
-        
-httpd = HTTPServer(('127.0.0.1', 443), SimpleHTTPRequestHandler)
+
+# change to 172.17.0.3:443 in case you use this ip addr of the sending web server's container assigned on your local host
+# change to 127.0.0.1:443 in case you run with local Anaconda IPython        
+httpd = HTTPServer(('0.0.0.0', 443), SimpleHTTPRequestHandler)
 httpd.serve_forever()
 
 # Using command prompt -- DO POST

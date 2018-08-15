@@ -5,4 +5,5 @@ WORKDIR ./
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
+EXPOSE 443 5672
 CMD [ "python", "./sendwebapp.py" ]

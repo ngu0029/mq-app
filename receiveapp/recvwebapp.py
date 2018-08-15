@@ -7,15 +7,17 @@ def callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode("utf-8"))
     
     # post the text message to the web page
-    # 172.17.0.4 is the http server's container ip address
-    # change to 127.0.0.1:5000 in case you run with local anaconda IPython
-    requests.post("http://172.17.0.4:5000", data={'text': body.decode("utf-8")})
+    # change to 172.17.0.4:5000 in case you use this ip addr of the http server's container assigned on your local host
+    # change to 127.0.0.1:5000 in case you run with local Anaconda IPython
+	# Use --link for networking between containers
+    requests.post("http://server-app:5000", data={'text': body.decode("utf-8")})
 
 def rabbitMsgQueue():
     # establish a connection with localhost message broker server
-    # 172.17.0.2 is the rabbitmq's container ip address
-    # change to 127.0.0.1:80 in case you run with local anaconda IPython
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2',\
+    # change to 172.17.0.2:5672 in case you use this ip addr of the rabbitmq's container assigned on your local host
+    # change to 127.0.0.1:80 in case you run with local Anaconda IPython
+	# Use --link for networking between containers
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='my-rabbitmq',\
                                                                    port=5672))
     channel = connection.channel()
     

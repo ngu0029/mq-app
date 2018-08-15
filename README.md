@@ -3,13 +3,14 @@ Prerequisites:
 - Install Anaconda for Python 3.6 on Windows (https://www.anaconda.com/download/). This installation is only for 
 the setup 3 option in case you want to run Python applications with IPython on your local PC.
 
-Note: I have set up and tested the applications on Windows 10 Pro laptop.
+Note: I have set up and tested the applications on Windows 10 Pro laptop. 
+Using Docker for Windows on Windows 10 Pro, you must also switch to Linux containers.
 
 You can choose:
 - Setup 1 option if you want to do the setup in one shot with the bash script
 - Setup 2 option if you want to do the setup by running each application in different PowerShells
 to see the output on each application when you do the test
-- Setup 3 option if you want to run Python applications with local Ananconda IPython
+- Setup 3 option if you want to run Python applications with local Anaconda IPython
 
 Finally, do the test.
 
@@ -41,9 +42,11 @@ Python Docker image for the sending app
 
 a. PS D:\github\mq-app\sendapp> docker build -t my-sending-app .
 
-b. PS D:\github\mq-app\sendapp> docker run -it --rm --name send-app -p 443:443 my-sending-app
+b. PS D:\github\mq-app\sendapp> docker run -it --rm --name send-app -p 443:443 --link my-rabbitmq:my-rabbitmq my-sending-app
 
-In the sendwebapp.py, I use the rabbitmq's container ip address and and default port 5672.
+Here:
+I map the container’s port 443 to the localhost’s port 443. You can execute the curl command to http://127.0.0.1:443.
+I use --link to connect the sending app container to the rabbitmq service.
 You can specify the public ip address and port of the RabbitMQ server in case of use.
 
 3. Build and run Python Docker image for the http server app to receive the text message post
@@ -55,7 +58,7 @@ a. PS D:\github\mq-app\server> docker build -t my-server-app .
 
 b. PS D:\github\mq-app\server> docker run -it --rm --name server-app -p 5000:5000 my-server-app
 
-Here I map the container’s port 5000 to the localhost’s port 5000. The web server is running on local host.
+Here I map the container’s port 5000 to the localhost’s port 5000. You can access the web page via http://127.0.0.1:5000.
 
 4. Build and run Python Docker image for the receiving app
 - Open a new Windows PowerShell
@@ -64,9 +67,9 @@ Python Docker image for the receiving app
 
 a. PS D:\github\mq-app\receiveapp> docker build -t my-receiving-app .
 
-b. PS D:\github\mq-app\receiveapp> docker run -it --rm --name receive-app -p 8080:8080 my-receiving-app
+b. PS D:\github\mq-app\receiveapp> docker run -it --rm --name receive-app -p 8080:8080 --link my-rabbitmq:my-rabbitmq --link server-app:server-app my-receiving-app
 
-In the recvwebapp.py, I use the rabbitmq's container ip address and and default port 5672.
+Here I use --link to connect the sending app container to the rabbitmq and http server services.
 You can specify the public ip address and port of the RabbitMQ server in case of use.
 
 
@@ -103,9 +106,10 @@ PS C:\Users\T901\Anaconda3\Scripts> .\ipython D:\github\mq-app\receiveapp\recvwe
 
 
 ============= TEST =============
-1. Open a new Windows PowerSheel, and enter curl command to do HTTP Post
+1. Open a command prompt window (CMD), and execute curl command to do HTTP Post to 
+the localhost at port 443 http://127.0.0.1:443/
 
-PS C:\Users\T901> docker exec -it send-app curl -k --data "text=HELLO" http://127.0.0.1:443/
+C:\Users\T901>curl -k --data "text=HELLO" http://127.0.0.1:443/
 
 2. Open web browser, e.g. Chrome, and browser to the localhost at port 5000 http://127.0.0.1:5000
 You would see the text, for example: HELLO, on the web page.
