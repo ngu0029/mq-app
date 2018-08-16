@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  my-rabbitmq:
+    image: rabbitmq:3
+    container_name: my-rabbitmq
+    ports: 
+      - "80:5672"
+
+  send-app:
+    build: ./sendapp
+    command: python sendwebapp.py
+    volumes:
+      - ./sendapp:/app
+    image: my-sending-app
+    container_name: send-app
+    depends_on:
+      - "my-rabbitmq"
+    ports:
+      - "443:443"
+
+  server-app:
+    build: ./server
+    command: python httpserver.py
+    volumes:
+      - ./server:/app
+    image: my-server-app
+    container_name: server-app
+    ports:
+      - "5000:5000"
+
+  receive-app:
+    build: ./receiveapp
+    volumes:
+      - ./receiveapp:/app
+    image: my-receiving-app
+    container_name: receive-app
+    depends_on:
+      - "my-rabbitmq"
+      - "server-app"
+    ports:
+      - "8080:8080"
